@@ -259,6 +259,11 @@ public class GalleryFragment extends OCFileListFragment {
         }
     }
 
+    @Override
+    public boolean isGalleryFragment() {
+        return true;
+    }
+
     public GalleryAdapter getGalleryAdapter() {
         return mAdapter;
     }
