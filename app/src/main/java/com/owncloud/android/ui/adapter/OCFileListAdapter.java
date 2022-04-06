@@ -492,6 +492,12 @@ public class OCFileListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     itemViewHolder.getOverflowMenu().setOnClickListener(view -> ocFileListFragmentInterface
                         .onOverflowIconClicked(file, view));
                 }
+
+                if (file.isLocked()) {
+                    itemViewHolder.getLockIndicator().setVisibility(View.VISIBLE);
+                } else {
+                    itemViewHolder.getLockIndicator().setVisibility(View.GONE);
+                }
             }
 
             gridViewHolder.getLocalFileIndicator().setVisibility(View.INVISIBLE);   // default first
@@ -1297,6 +1303,11 @@ public class OCFileListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         public ImageView getUnreadComments() {
             return binding.unreadComments;
         }
+
+        @Override
+        public View getLockIndicator() {
+            return binding.lockIndicator;
+        }
     }
 
     static class OCFileListGridItemViewHolder extends RecyclerView.ViewHolder implements ListGridItemViewHolder {
@@ -1438,6 +1449,7 @@ public class OCFileListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         View getItemLayout();
 
         ImageView getUnreadComments();
+
     }
 
     interface ListGridItemViewHolder extends ListGridImageViewHolder {
@@ -1454,5 +1466,7 @@ public class OCFileListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         ImageView getOverflowMenu();
 
         AvatarGroupLayout getSharedAvatars();
+
+        View getLockIndicator();
     }
 }
