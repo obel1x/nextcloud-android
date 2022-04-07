@@ -79,7 +79,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
@@ -107,7 +106,6 @@ public class OCFileListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private boolean hideItemOptions;
     private long lastTimestamp;
     private boolean gridView;
-    private Set<OCFile> checkedFiles;
 
     private FileDataStorageManager mStorageManager;
     private User user;
@@ -142,7 +140,6 @@ public class OCFileListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         this.user = user;
         hideItemOptions = argHideItemOptions;
         this.gridView = gridView;
-        checkedFiles = new HashSet<>();
 
         if (this.user != null) {
             AccountManager platformAccountManager = AccountManager.get(this.activity);
@@ -180,15 +177,11 @@ public class OCFileListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     public void removeCheckedFile(OCFile file) {
-        checkedFiles.remove(file);
+        ocFileListDelegate.removeCheckedFile(file);
     }
 
     public void addAllFilesToCheckedFiles() {
-        checkedFiles.addAll(mFiles);
-    }
-
-    public void removeAllFilesFromCheckedFiles() {
-        checkedFiles.clear();
+        ocFileListDelegate.addToCheckedFiles(mFiles);
     }
 
     public int getItemPosition(OCFile file) {
@@ -802,16 +795,15 @@ public class OCFileListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     public Set<OCFile> getCheckedItems() {
-        return checkedFiles;
+        return ocFileListDelegate.getCheckedItems();
     }
 
     public void setCheckedItem(Set<OCFile> files) {
-        checkedFiles.clear();
-        checkedFiles.addAll(files);
+        ocFileListDelegate.setCheckedItem(files);
     }
 
     public void clearCheckedItems() {
-        checkedFiles.clear();
+        ocFileListDelegate.clearCheckedItems();
     }
 
     public void setFiles(List<OCFile> files) {
@@ -952,5 +944,15 @@ public class OCFileListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     public OCFile getCurrentDirectory() {
         return currentDirectory;
+    }
+
+    @Override
+    public int getFilesCount() {
+        return mFiles.size();
+    }
+
+    @Override
+    public void notifyItemChanged(@NonNull OCFile file) {
+        notifyItemChanged(getItemPosition(file));
     }
 }
