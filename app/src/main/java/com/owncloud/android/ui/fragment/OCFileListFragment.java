@@ -1169,6 +1169,8 @@ public class OCFileListFragment extends ExtendedListFragment implements
         } else if (itemId == R.id.action_send_file) {
             mContainerActivity.getFileOperationsHelper().sendFiles(checkedFiles);
             return true;
+        } else if (itemId == R.id.action_lock_file) {
+            // TODO call lock API
         }
 
         return false;
