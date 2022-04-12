@@ -22,6 +22,7 @@
 
 package com.owncloud.android.ui.adapter
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
@@ -69,8 +70,8 @@ class GalleryAdapter(
             preferences,
             true,
             transferServiceGetter,
-            false,
-            false
+            showMetadata = false,
+            showShareAvatar = false
         )
     }
 
@@ -133,6 +134,7 @@ class GalleryAdapter(
         TODO("Not yet implemented")
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     fun showAllGalleryItems(storageManager: FileDataStorageManager) {
         val items = storageManager.allGalleryItems
 
@@ -213,13 +215,14 @@ class GalleryAdapter(
     }
 
     override fun notifyItemChanged(file: OCFile) {
-        notifyDataSetChanged()
+        notifyItemChanged(getItemPosition(file))
     }
 
     override fun getFilesCount(): Int {
         return files.fold(0) { acc, item -> acc + item.files.size }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun setMultiSelect(boolean: Boolean) {
         ocFileListDelegate.isMultiSelect = boolean
         notifyDataSetChanged()

@@ -25,6 +25,7 @@
 package com.owncloud.android.ui.adapter;
 
 import android.accounts.AccountManager;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.res.Resources;
@@ -120,7 +121,7 @@ public class OCFileListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     public OCFileListAdapter(
         Activity activity,
-        User user,
+        @NonNull User user,
         AppPreferences preferences,
         ComponentsGetter transferServiceGetter,
         OCFileListFragmentInterface ocFileListFragmentInterface,
@@ -134,13 +135,10 @@ public class OCFileListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         hideItemOptions = argHideItemOptions;
         this.gridView = gridView;
 
-        if (this.user != null) {
-            AccountManager platformAccountManager = AccountManager.get(this.activity);
-            userId = platformAccountManager.getUserData(this.user.toPlatformAccount(),
-                                                        com.owncloud.android.lib.common.accounts.AccountUtils.Constants.KEY_USER_ID);
-        } else {
-            userId = "";
-        }
+        userId = AccountManager
+            .get(activity)
+            .getUserData(this.user.toPlatformAccount(),
+                         com.owncloud.android.lib.common.accounts.AccountUtils.Constants.KEY_USER_ID);
 
         ocFileListDelegate = new OCFileListDelegate(activity,
                                                     ocFileListFragmentInterface,
@@ -164,12 +162,13 @@ public class OCFileListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         return ocFileListDelegate.isMultiSelect();
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     public void setMultiSelect(boolean bool) {
         ocFileListDelegate.setMultiSelect(bool);
         notifyDataSetChanged();
     }
 
-    public void removeCheckedFile(OCFile file) {
+    public void removeCheckedFile(@NonNull OCFile file) {
         ocFileListDelegate.removeCheckedFile(file);
     }
 
@@ -177,7 +176,7 @@ public class OCFileListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         ocFileListDelegate.addToCheckedFiles(mFiles);
     }
 
-    public int getItemPosition(OCFile file) {
+    public int getItemPosition(@NonNull OCFile file) {
         int position = mFiles.indexOf(file);
 
         if (shouldShowHeader()) {
@@ -577,15 +576,16 @@ public class OCFileListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
      * @param updatedStorageManager Optional updated storage manager; used to replace
      * @param limitToMimeType       show only files of this mimeType
      */
+    @SuppressLint("NotifyDataSetChanged")
     public void swapDirectory(
-        User account,
-        OCFile directory,
-        FileDataStorageManager updatedStorageManager,
-        boolean onlyOnDevice, String limitToMimeType
+        @NonNull User account,
+        @NonNull OCFile directory,
+        @NonNull FileDataStorageManager updatedStorageManager,
+        boolean onlyOnDevice, @NonNull String limitToMimeType
                              ) {
         this.onlyOnDevice = onlyOnDevice;
 
-        if (updatedStorageManager != null && !updatedStorageManager.equals(mStorageManager)) {
+        if (!updatedStorageManager.equals(mStorageManager)) {
             mStorageManager = updatedStorageManager;
             ocFileListDelegate.setShowShareAvatar(CapabilityUtils.getCapability(account, activity).getVersion().isShareesOnDavSupported());
             this.user = account;

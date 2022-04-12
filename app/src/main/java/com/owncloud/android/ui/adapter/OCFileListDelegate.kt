@@ -31,7 +31,6 @@ import com.owncloud.android.datamodel.OCFile
 import com.owncloud.android.datamodel.ThumbnailsCacheManager.ThumbnailGenerationTask
 import com.owncloud.android.lib.common.utils.Log_OC
 import com.owncloud.android.ui.activity.ComponentsGetter
-import com.owncloud.android.ui.adapter.OCFileListDelegate
 import com.owncloud.android.ui.interfaces.OCFileListFragmentInterface
 import com.owncloud.android.utils.DisplayUtils
 import com.owncloud.android.utils.theme.ThemeColorUtils
@@ -119,10 +118,10 @@ class OCFileListDelegate(
             gridViewHolder.itemLayout.setBackgroundColor(context.resources.getColor(R.color.bg_default))
             gridViewHolder.checkbox.setImageResource(R.drawable.ic_checkbox_blank_outline)
         }
-        gridViewHolder.itemLayout.setOnClickListener { v: View? -> ocFileListFragmentInterface.onItemClicked(file) }
+        gridViewHolder.itemLayout.setOnClickListener { ocFileListFragmentInterface.onItemClicked(file) }
         if (!hideItemOptions) {
             gridViewHolder.itemLayout.isLongClickable = true
-            gridViewHolder.itemLayout.setOnLongClickListener { v: View? ->
+            gridViewHolder.itemLayout.setOnLongClickListener {
                 ocFileListFragmentInterface.onLongItemClicked(
                     file
                 )
@@ -132,7 +131,7 @@ class OCFileListDelegate(
         // unread comments
         if (file.unreadCommentsCount > 0) {
             gridViewHolder.unreadComments.visibility = View.VISIBLE
-            gridViewHolder.unreadComments.setOnClickListener { view: View? ->
+            gridViewHolder.unreadComments.setOnClickListener {
                 ocFileListFragmentInterface
                     .showActivityDetailView(file)
             }
@@ -204,7 +203,7 @@ class OCFileListDelegate(
                 sharedIconView.setImageResource(R.drawable.ic_unshared)
                 sharedIconView.contentDescription = context.getString(R.string.shared_icon_share)
             }
-            sharedIconView.setOnClickListener { view: View? -> ocFileListFragmentInterface.onShareIconClick(file) }
+            sharedIconView.setOnClickListener { ocFileListFragmentInterface.onShareIconClick(file) }
         } else {
             sharedIconView.visibility = View.GONE
         }
@@ -212,12 +211,10 @@ class OCFileListDelegate(
 
     fun cancelAllPendingTasks() {
         for (task in asyncTasks) {
-            if (task != null) {
-                task.cancel(true)
-                if (task.getMethod != null) {
-                    Log_OC.d(TAG, "cancel: abort get method directly")
-                    task.getMethod.abort()
-                }
+            task.cancel(true)
+            if (task.getMethod != null) {
+                Log_OC.d(TAG, "cancel: abort get method directly")
+                task.getMethod.abort()
             }
         }
         asyncTasks.clear()
