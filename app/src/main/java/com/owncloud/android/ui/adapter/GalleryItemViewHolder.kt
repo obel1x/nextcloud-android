@@ -30,35 +30,27 @@ import com.owncloud.android.databinding.GridImageBinding
 
 class GalleryItemViewHolder(val binding: GridImageBinding) :
     SectionedViewHolder(binding.root), ListGridImageViewHolder {
-    override fun getThumbnail(): ImageView {
-        return binding.thumbnail
-    }
+    override val thumbnail: ImageView
+        get() = binding.thumbnail
 
-    override fun getShimmerThumbnail(): LoaderImageView {
-        return binding.thumbnailShimmer
-    }
+    override val shimmerThumbnail: LoaderImageView
+        get() = binding.thumbnailShimmer
 
-    override fun getFavorite(): ImageView {
-        return binding.favoriteAction
-    }
+    override val favorite: ImageView
+        get() = binding.favoriteAction
 
-    override fun getLocalFileIndicator(): ImageView {
-        return binding.localFileIndicator
-    }
+    override val localFileIndicator: ImageView
+        get() = binding.localFileIndicator
 
-    override fun getShared(): ImageView {
-        return binding.sharedIcon
-    }
+    override val shared: ImageView
+        get() = binding.sharedIcon
 
-    override fun getCheckbox(): ImageView {
-        return binding.customCheckbox
-    }
+    override val checkbox: ImageView
+        get() = binding.customCheckbox
 
-    override fun getItemLayout(): View {
-        return binding.ListItemLayout
-    }
+    override val itemLayout: View
+        get() = binding.ListItemLayout
 
-    override fun getUnreadComments(): ImageView {
-        return binding.unreadComments
-    }
+    override val unreadComments: ImageView
+        get() = binding.unreadComments
 }

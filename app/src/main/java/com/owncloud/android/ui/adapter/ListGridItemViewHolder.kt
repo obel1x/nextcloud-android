@@ -19,11 +19,10 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
+package com.owncloud.android.ui.adapter
 
-package com.owncloud.android.ui.adapter;
+import android.widget.TextView
 
-import android.widget.TextView;
-
-interface ListGridItemViewHolder extends ListGridImageViewHolder {
-    TextView getFileName();
+internal interface ListGridItemViewHolder : ListGridImageViewHolder {
+    val fileName: TextView
 }

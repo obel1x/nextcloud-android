@@ -19,28 +19,19 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
+package com.owncloud.android.ui.adapter
 
-package com.owncloud.android.ui.adapter;
-
-import android.view.View;
-import android.widget.ImageView;
-
-import com.elyeproj.loaderviewlibrary.LoaderImageView;
+import android.view.View
+import android.widget.ImageView
+import com.elyeproj.loaderviewlibrary.LoaderImageView
 
 interface ListGridImageViewHolder {
-    ImageView getThumbnail();
-
-    LoaderImageView getShimmerThumbnail();
-
-    ImageView getFavorite();
-
-    ImageView getLocalFileIndicator();
-
-    ImageView getShared();
-
-    ImageView getCheckbox();
-
-    View getItemLayout();
-
-    ImageView getUnreadComments();
+    val thumbnail: ImageView
+    val shimmerThumbnail: LoaderImageView
+    val favorite: ImageView
+    val localFileIndicator: ImageView
+    val shared: ImageView
+    val checkbox: ImageView
+    val itemLayout: View
+    val unreadComments: ImageView
 }

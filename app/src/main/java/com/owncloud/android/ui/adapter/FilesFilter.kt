@@ -19,51 +19,37 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
+package com.owncloud.android.ui.adapter
 
-package com.owncloud.android.ui.adapter;
+import android.text.TextUtils
+import android.widget.Filter
+import com.owncloud.android.datamodel.OCFile
+import java.util.Locale
+import java.util.Vector
 
-import android.text.TextUtils;
-import android.widget.Filter;
-
-import com.owncloud.android.datamodel.OCFile;
-
-import java.util.Locale;
-import java.util.Vector;
-
-class FilesFilter extends Filter {
-    private final OCFileListAdapter ocFileListAdapter;
-
-    public FilesFilter(OCFileListAdapter ocFileListAdapter) {
-        this.ocFileListAdapter = ocFileListAdapter;
-    }
-
-    @Override
-    protected FilterResults performFiltering(CharSequence constraint) {
-        FilterResults results = new FilterResults();
-        Vector<OCFile> filteredFiles = new Vector<>();
-
+internal class FilesFilter(private val ocFileListAdapter: OCFileListAdapter) : Filter() {
+    override fun performFiltering(constraint: CharSequence): FilterResults {
+        val results = FilterResults()
+        val filteredFiles = Vector<OCFile>()
         if (!TextUtils.isEmpty(constraint)) {
-            for (OCFile file : ocFileListAdapter.getAllFiles()) {
-                if (file.getParentRemotePath().equals(ocFileListAdapter.getCurrentDirectory().getRemotePath()) &&
-                    file.getFileName().toLowerCase(Locale.getDefault()).contains(
-                        constraint.toString().toLowerCase(Locale.getDefault())) &&
-                    !filteredFiles.contains(file)) {
-                    filteredFiles.add(file);
+            for (file in ocFileListAdapter.allFiles) {
+                if (file.parentRemotePath == ocFileListAdapter.currentDirectory.remotePath &&
+                    file.fileName.lowercase(Locale.getDefault()).contains(
+                        constraint.toString().lowercase(Locale.getDefault())
+                    ) &&
+                    !filteredFiles.contains(file)
+                ) {
+                    filteredFiles.add(file)
                 }
             }
         }
-
-        results.values = filteredFiles;
-        results.count = filteredFiles.size();
-
-        return results;
+        results.values = filteredFiles
+        results.count = filteredFiles.size
+        return results
     }
 
-    @SuppressWarnings("unchecked")
-    @Override
-    protected void publishResults(CharSequence constraint, FilterResults results) {
-        Vector<OCFile> ocFiles = (Vector<OCFile>) results.values;
-
-        ocFileListAdapter.updateFilteredResults(ocFiles);
+    override fun publishResults(constraint: CharSequence, results: FilterResults) {
+        val ocFiles = results.values as Vector<OCFile>
+        ocFileListAdapter.updateFilteredResults(ocFiles)
     }
 }

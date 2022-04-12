@@ -19,23 +19,17 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
+package com.owncloud.android.ui.adapter
 
-package com.owncloud.android.ui.adapter;
+import android.view.View
+import android.widget.ImageView
+import android.widget.TextView
+import com.owncloud.android.ui.AvatarGroupLayout
 
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
-
-import com.owncloud.android.ui.AvatarGroupLayout;
-
-interface ListItemViewHolder extends ListGridItemViewHolder {
-    TextView getFileSize();
-
-    View getFileSizeSeparator();
-
-    TextView getLastModification();
-
-    ImageView getOverflowMenu();
-
-    AvatarGroupLayout getSharedAvatars();
+internal interface ListItemViewHolder : ListGridItemViewHolder {
+    val fileSize: TextView
+    val fileSizeSeparator: View
+    val lastModification: TextView
+    val overflowMenu: ImageView
+    val sharedAvatars: AvatarGroupLayout
 }

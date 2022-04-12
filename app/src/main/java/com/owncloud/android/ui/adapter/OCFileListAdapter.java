@@ -332,17 +332,17 @@ public class OCFileListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof OCFileListFooterViewHolder) {
             OCFileListFooterViewHolder footerViewHolder = (OCFileListFooterViewHolder) holder;
-            footerViewHolder.binding.footerText.setText(getFooterText());
-            footerViewHolder.binding.loadingProgressBar.getIndeterminateDrawable()
+            footerViewHolder.getFooterText().setText(getFooterText());
+            footerViewHolder.getLoadingProgressBar().getIndeterminateDrawable()
                 .setColorFilter(ThemeColorUtils.primaryColor(activity), PorterDuff.Mode.SRC_IN);
-            footerViewHolder.binding.loadingProgressBar.setVisibility(
+            footerViewHolder.getLoadingProgressBar().setVisibility(
                 ocFileListFragmentInterface.isLoading() ? View.VISIBLE : View.GONE);
         } else if (holder instanceof OCFileListHeaderViewHolder) {
             OCFileListHeaderViewHolder headerViewHolder = (OCFileListHeaderViewHolder) holder;
             String text = currentDirectory.getRichWorkspace();
 
-            PreviewTextFragment.setText(headerViewHolder.binding.headerText, text, null, activity, true, true);
-            headerViewHolder.binding.headerView.setOnClickListener(v -> ocFileListFragmentInterface.onHeaderClicked());
+            PreviewTextFragment.setText(headerViewHolder.getHeaderText(), text, null, activity, true, true);
+            headerViewHolder.getHeaderView().setOnClickListener(v -> ocFileListFragmentInterface.onHeaderClicked());
         } else {
             ListGridImageViewHolder gridViewHolder = (ListGridImageViewHolder) holder;
             OCFile file = getItem(position);

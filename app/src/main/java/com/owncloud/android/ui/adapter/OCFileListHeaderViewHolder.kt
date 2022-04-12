@@ -19,18 +19,17 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
+package com.owncloud.android.ui.adapter
 
-package com.owncloud.android.ui.adapter;
+import androidx.recyclerview.widget.RecyclerView
+import com.owncloud.android.databinding.ListHeaderBinding
 
-import com.owncloud.android.databinding.ListHeaderBinding;
+internal class OCFileListHeaderViewHolder(var binding: ListHeaderBinding) : RecyclerView.ViewHolder(
+    binding.root
+) {
+    val headerText
+        get() = binding.headerText
 
-import androidx.recyclerview.widget.RecyclerView;
-
-class OCFileListHeaderViewHolder extends RecyclerView.ViewHolder {
-    protected ListHeaderBinding binding;
-
-    OCFileListHeaderViewHolder(ListHeaderBinding binding) {
-        super(binding.getRoot());
-        this.binding = binding;
-    }
+    val headerView
+        get() = binding.headerView
 }

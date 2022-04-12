@@ -19,95 +19,49 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
+package com.owncloud.android.ui.adapter
 
-package com.owncloud.android.ui.adapter;
+import android.view.View
+import android.widget.ImageView
+import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
+import com.elyeproj.loaderviewlibrary.LoaderImageView
+import com.owncloud.android.databinding.ListItemBinding
+import com.owncloud.android.ui.AvatarGroupLayout
 
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
+internal class OCFileListItemViewHolder(private var binding: ListItemBinding) : RecyclerView.ViewHolder(
+    binding.root
+), ListItemViewHolder {
+    override val fileSize: TextView
+        get() = binding.fileSize
+    override val fileSizeSeparator: View
+        get() = binding.fileSeparator
+    override val lastModification: TextView
+        get() = binding.lastMod
+    override val overflowMenu: ImageView
+        get() = binding.overflowMenu
+    override val sharedAvatars: AvatarGroupLayout
+        get() = binding.sharedAvatars
+    override val fileName: TextView
+        get() = binding.Filename
+    override val thumbnail: ImageView
+        get() = binding.thumbnail
+    override val shimmerThumbnail: LoaderImageView
+        get() = binding.thumbnailShimmer
+    override val favorite: ImageView
+        get() = binding.favoriteAction
+    override val localFileIndicator: ImageView
+        get() = binding.localFileIndicator
+    override val shared: ImageView
+        get() = binding.sharedIcon
+    override val checkbox: ImageView
+        get() = binding.customCheckbox
+    override val itemLayout: View
+        get() = binding.ListItemLayout
+    override val unreadComments: ImageView
+        get() = binding.unreadComments
 
-import com.elyeproj.loaderviewlibrary.LoaderImageView;
-import com.owncloud.android.databinding.ListItemBinding;
-import com.owncloud.android.ui.AvatarGroupLayout;
-
-import androidx.recyclerview.widget.RecyclerView;
-
-class OCFileListItemViewHolder extends RecyclerView.ViewHolder implements ListItemViewHolder {
-    protected ListItemBinding binding;
-
-    OCFileListItemViewHolder(ListItemBinding binding) {
-        super(binding.getRoot());
-        this.binding = binding;
-        this.binding.favoriteAction.getDrawable().mutate();
-    }
-
-    @Override
-    public TextView getFileSize() {
-        return binding.fileSize;
-    }
-
-    @Override
-    public View getFileSizeSeparator() {
-        return binding.fileSeparator;
-    }
-
-    @Override
-    public TextView getLastModification() {
-        return binding.lastMod;
-    }
-
-    @Override
-    public ImageView getOverflowMenu() {
-        return binding.overflowMenu;
-    }
-
-    @Override
-    public AvatarGroupLayout getSharedAvatars() {
-        return binding.sharedAvatars;
-    }
-
-    @Override
-    public TextView getFileName() {
-        return binding.Filename;
-    }
-
-    @Override
-    public ImageView getThumbnail() {
-        return binding.thumbnail;
-    }
-
-    @Override
-    public LoaderImageView getShimmerThumbnail() {
-        return binding.thumbnailShimmer;
-    }
-
-    @Override
-    public ImageView getFavorite() {
-        return binding.favoriteAction;
-    }
-
-    @Override
-    public ImageView getLocalFileIndicator() {
-        return binding.localFileIndicator;
-    }
-
-    @Override
-    public ImageView getShared() {
-        return binding.sharedIcon;
-    }
-
-    @Override
-    public ImageView getCheckbox() {
-        return binding.customCheckbox;
-    }
-
-    @Override
-    public View getItemLayout() {
-        return binding.ListItemLayout;
-    }
-
-    @Override
-    public ImageView getUnreadComments() {
-        return binding.unreadComments;
+    init {
+        binding.favoriteAction.drawable.mutate()
     }
 }

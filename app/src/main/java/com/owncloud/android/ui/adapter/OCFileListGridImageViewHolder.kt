@@ -19,63 +19,35 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
+package com.owncloud.android.ui.adapter
 
-package com.owncloud.android.ui.adapter;
+import android.view.View
+import android.widget.ImageView
+import androidx.recyclerview.widget.RecyclerView
+import com.elyeproj.loaderviewlibrary.LoaderImageView
+import com.owncloud.android.databinding.GridImageBinding
 
-import android.view.View;
-import android.widget.ImageView;
+internal class OCFileListGridImageViewHolder(var binding: GridImageBinding) : RecyclerView.ViewHolder(
+    binding.root
+), ListGridImageViewHolder {
+    override val thumbnail: ImageView
+        get() = binding.thumbnail
+    override val shimmerThumbnail: LoaderImageView
+        get() = binding.thumbnailShimmer
+    override val favorite: ImageView
+        get() = binding.favoriteAction
+    override val localFileIndicator: ImageView
+        get() = binding.localFileIndicator
+    override val shared: ImageView
+        get() = binding.sharedIcon
+    override val checkbox: ImageView
+        get() = binding.customCheckbox
+    override val itemLayout: View
+        get() = binding.ListItemLayout
+    override val unreadComments: ImageView
+        get() = binding.unreadComments
 
-import com.elyeproj.loaderviewlibrary.LoaderImageView;
-import com.owncloud.android.databinding.GridImageBinding;
-
-import androidx.recyclerview.widget.RecyclerView;
-
-class OCFileListGridImageViewHolder extends RecyclerView.ViewHolder implements ListGridImageViewHolder {
-    protected GridImageBinding binding;
-
-    OCFileListGridImageViewHolder(GridImageBinding binding) {
-        super(binding.getRoot());
-        this.binding = binding;
-        this.binding.favoriteAction.getDrawable().mutate();
-    }
-
-    @Override
-    public ImageView getThumbnail() {
-        return binding.thumbnail;
-    }
-
-    @Override
-    public LoaderImageView getShimmerThumbnail() {
-        return binding.thumbnailShimmer;
-    }
-
-    @Override
-    public ImageView getFavorite() {
-        return binding.favoriteAction;
-    }
-
-    @Override
-    public ImageView getLocalFileIndicator() {
-        return binding.localFileIndicator;
-    }
-
-    @Override
-    public ImageView getShared() {
-        return binding.sharedIcon;
-    }
-
-    @Override
-    public ImageView getCheckbox() {
-        return binding.customCheckbox;
-    }
-
-    @Override
-    public View getItemLayout() {
-        return binding.ListItemLayout;
-    }
-
-    @Override
-    public ImageView getUnreadComments() {
-        return binding.unreadComments;
+    init {
+        binding.favoriteAction.drawable.mutate()
     }
 }
