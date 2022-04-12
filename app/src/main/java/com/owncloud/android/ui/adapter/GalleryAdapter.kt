@@ -160,7 +160,9 @@ class GalleryAdapter(
     }
 
     fun getItem(position: Int): OCFile {
-        TODO("Not yet implemented")
+        val itemCoord = getRelativePosition(position)
+
+        return files[itemCoord.section()].files[itemCoord.relativePos()]
     }
 
     override fun isMultiSelect(): Boolean {

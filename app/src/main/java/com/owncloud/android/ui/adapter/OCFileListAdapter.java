@@ -359,7 +359,7 @@ public class OCFileListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             }
 
             if (holder instanceof ListGridItemViewHolder) {
-                bindListGridItemViewHolder(holder, file);
+                bindListGridItemViewHolder((ListGridItemViewHolder) holder, file);
             }
         }
     }
@@ -445,19 +445,17 @@ public class OCFileListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
-    private void bindListGridItemViewHolder(RecyclerView.ViewHolder holder, OCFile file) {
-        ListGridItemViewHolder gridItemViewHolder = (ListGridItemViewHolder) holder;
-
-        gridItemViewHolder.getFileName().setText(file.getDecryptedFileName());
+    private void bindListGridItemViewHolder(ListGridItemViewHolder holder, OCFile file) {
+        holder.getFileName().setText(file.getDecryptedFileName());
 
         boolean gridImage = MimeTypeUtil.isImage(file) || MimeTypeUtil.isVideo(file);
         if (gridView && gridImage) {
-            gridItemViewHolder.getFileName().setVisibility(View.GONE);
+            holder.getFileName().setVisibility(View.GONE);
         } else {
             if (gridView && ocFileListFragmentInterface.getColumnsCount() > showFilenameColumnThreshold) {
-                gridItemViewHolder.getFileName().setVisibility(View.GONE);
+                holder.getFileName().setVisibility(View.GONE);
             } else {
-                gridItemViewHolder.getFileName().setVisibility(View.VISIBLE);
+                holder.getFileName().setVisibility(View.VISIBLE);
             }
         }
     }
