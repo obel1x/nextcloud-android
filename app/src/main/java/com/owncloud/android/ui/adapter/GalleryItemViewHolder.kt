@@ -28,8 +28,8 @@ import com.afollestad.sectionedrecyclerview.SectionedViewHolder
 import com.elyeproj.loaderviewlibrary.LoaderImageView
 import com.owncloud.android.databinding.GridImageBinding
 
-class GalleryItemViewHolder(val binding: GridImageBinding) : SectionedViewHolder(binding.root),
-    ListGridImageViewHolder {
+class GalleryItemViewHolder(val binding: GridImageBinding) :
+    SectionedViewHolder(binding.root), ListGridImageViewHolder {
     override fun getThumbnail(): ImageView {
         return binding.thumbnail
     }

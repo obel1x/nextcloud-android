@@ -50,14 +50,15 @@ class GalleryAdapter(
     user: User,
     ocFileListFragmentInterface: OCFileListFragmentInterface,
     preferences: AppPreferences,
-    storageManager: FileDataStorageManager,
     transferServiceGetter: ComponentsGetter
 ) : SectionedRecyclerViewAdapter<SectionedViewHolder>(), CommonOCFileListAdapterInterface {
     private var files: List<GalleryItems> = mutableListOf()
     private var ocFileListDelegate: OCFileListDelegate
+    private var storageManager: FileDataStorageManager
 
     init {
         shouldShowFooters(false)
+        storageManager = transferServiceGetter.storageManager
 
         ocFileListDelegate = OCFileListDelegate(
             context,
@@ -176,7 +177,7 @@ class GalleryAdapter(
     }
 
     override fun swapDirectory(
-        User: User,
+        user: User,
         directory: OCFile,
         storageManager: FileDataStorageManager,
         onlyOnDevice: Boolean,

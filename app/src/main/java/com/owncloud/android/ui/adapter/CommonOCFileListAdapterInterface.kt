@@ -32,7 +32,7 @@ interface CommonOCFileListAdapterInterface {
     fun cancelAllPendingTasks()
     fun getItemPosition(file: OCFile): Int
     fun swapDirectory(
-        User: User,
+        user: User,
         directory: OCFile,
         storageManager: FileDataStorageManager,
         onlyOnDevice: Boolean,

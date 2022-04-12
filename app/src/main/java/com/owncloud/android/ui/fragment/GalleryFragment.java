@@ -105,7 +105,6 @@ public class GalleryFragment extends OCFileListFragment {
                                       accountManager.getUser(),
                                       this,
                                       preferences,
-                                      mContainerActivity.getStorageManager(),
                                       mContainerActivity);
 
 //        val spacing = resources.getDimensionPixelSize(R.dimen.media_grid_spacing)
