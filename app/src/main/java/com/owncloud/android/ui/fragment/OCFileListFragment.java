@@ -412,7 +412,7 @@ public class OCFileListFragment extends ExtendedListFragment implements
             isGridViewPreferred(mFile)
         );
 
-        setRecyclerViewAdapter((RecyclerView.Adapter) mAdapter);
+        setRecyclerViewAdapter(mAdapter);
     }
 
     protected void prepareCurrentSearch(SearchEvent event) {
@@ -1238,6 +1238,10 @@ public class OCFileListFragment extends ExtendedListFragment implements
                 if (!directory.isFolder()) {
                     Log_OC.w(TAG, "You see, that is not a directory -> " + directory);
                     directory = storageManager.getFileById(directory.getParentId());
+
+                    if (directory == null) {
+                        return; // no files, wait for sync
+                    }
                 }
 
                 if (searchView != null && !searchView.isIconified() && !fromSearch) {
@@ -1600,7 +1604,11 @@ public class OCFileListFragment extends ExtendedListFragment implements
 
 
                     FileDataStorageManager storageManager = mContainerActivity.getStorageManager();
-                    int position = mAdapter.getItemPosition(storageManager.getFileByRemoteId(event.remoteId));
+                    OCFile file = storageManager.getFileByRemoteId(event.remoteId);
+                    int position = -1;
+                    if (file != null) {
+                        position = mAdapter.getItemPosition(file);
+                    }
                     SetupEncryptionDialogFragment dialog = SetupEncryptionDialogFragment.newInstance(user, position);
                     dialog.setTargetFragment(this, SetupEncryptionDialogFragment.SETUP_ENCRYPTION_REQUEST_CODE);
                     dialog.show(getParentFragmentManager(), SetupEncryptionDialogFragment.SETUP_ENCRYPTION_DIALOG_TAG);

@@ -272,9 +272,4 @@ public class GalleryFragment extends OCFileListFragment {
     public void showAllGalleryItems() {
         mAdapter.showAllGalleryItems(mContainerActivity.getStorageManager());
     }
-
-    @Override
-    public boolean isGalleryFragment() {
-        return true;
-    }
 }

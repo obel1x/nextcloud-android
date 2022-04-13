@@ -73,11 +73,15 @@ import com.owncloud.android.utils.FileStorageUtils;
 import com.owncloud.android.utils.MimeTypeUtil;
 import com.owncloud.android.utils.theme.CapabilityUtils;
 import com.owncloud.android.utils.theme.ThemeColorUtils;
+import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import java.util.Vector;
 
@@ -85,13 +89,15 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
 import androidx.recyclerview.widget.RecyclerView;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  * This Adapter populates a RecyclerView with all files and folders in a Nextcloud instance.
  */
 public class OCFileListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     implements DisplayUtils.AvatarGenerationListener,
-    CommonOCFileListAdapterInterface {
+    CommonOCFileListAdapterInterface,
+    FastScrollRecyclerView.SectionedAdapter {
 
     private static final int showFilenameColumnThreshold = 4;
     private final String userId;
@@ -118,6 +124,9 @@ public class OCFileListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     private boolean onlyOnDevice;
     private final OCFileListDelegate ocFileListDelegate;
+    private FileSortOrder sortOrder;
+
+    private final SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM yyyy", Locale.getDefault());
 
     public OCFileListAdapter(
         Activity activity,
@@ -134,6 +143,7 @@ public class OCFileListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         this.user = user;
         hideItemOptions = argHideItemOptions;
         this.gridView = gridView;
+        mStorageManager = transferServiceGetter.getStorageManager();
 
         userId = AccountManager
             .get(activity)
@@ -328,6 +338,7 @@ public class OCFileListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     @Override
+    @SuppressFBWarnings("ITC_INHERITANCE_TYPE_CHECKING")
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof OCFileListFooterViewHolder) {
             OCFileListFooterViewHolder footerViewHolder = (OCFileListFooterViewHolder) holder;
@@ -354,7 +365,7 @@ public class OCFileListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             ocFileListDelegate.bindGridViewHolder(gridViewHolder, file);
 
             if (holder instanceof ListItemViewHolder) {
-                bindListItemViewHolder(gridViewHolder, file);
+                bindListItemViewHolder((ListItemViewHolder) gridViewHolder, file);
             }
 
             if (holder instanceof ListGridItemViewHolder) {
@@ -363,13 +374,11 @@ public class OCFileListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
-    private void bindListItemViewHolder(ListGridImageViewHolder holder, OCFile file) {
-        ListItemViewHolder itemViewHolder = (ListItemViewHolder) holder;
-
+    private void bindListItemViewHolder(ListItemViewHolder holder, OCFile file) {
         if ((file.isSharedWithMe() || file.isSharedWithSharee()) && !isMultiSelect() && !gridView &&
             !hideItemOptions) {
-            itemViewHolder.getSharedAvatars().setVisibility(View.VISIBLE);
-            itemViewHolder.getSharedAvatars().removeAllViews();
+            holder.getSharedAvatars().setVisibility(View.VISIBLE);
+            holder.getSharedAvatars().removeAllViews();
 
             String fileOwner = file.getOwnerId();
             List<ShareeUser> sharees = file.getSharees();
@@ -386,12 +395,12 @@ public class OCFileListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
             Log_OC.d(this, "sharees of " + file.getFileName() + ": " + sharees);
 
-            itemViewHolder.getSharedAvatars().setAvatars(user, sharees);
-            itemViewHolder.getSharedAvatars().setOnClickListener(
+            holder.getSharedAvatars().setAvatars(user, sharees);
+            holder.getSharedAvatars().setOnClickListener(
                 view -> ocFileListFragmentInterface.onShareIconClick(file));
         } else {
-            itemViewHolder.getSharedAvatars().setVisibility(View.GONE);
-            itemViewHolder.getSharedAvatars().removeAllViews();
+            holder.getSharedAvatars().setVisibility(View.GONE);
+            holder.getSharedAvatars().removeAllViews();
         }
 
         // npe fix: looks like file without local storage path somehow get here
@@ -405,41 +414,41 @@ public class OCFileListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 localSize = localFile.length();
             }
 
-            itemViewHolder.getFileSize().setText(DisplayUtils.bytesToHumanReadable(localSize));
-            itemViewHolder.getFileSize().setVisibility(View.VISIBLE);
-            itemViewHolder.getFileSizeSeparator().setVisibility(View.VISIBLE);
+            holder.getFileSize().setText(DisplayUtils.bytesToHumanReadable(localSize));
+            holder.getFileSize().setVisibility(View.VISIBLE);
+            holder.getFileSizeSeparator().setVisibility(View.VISIBLE);
         } else {
             final long fileLength = file.getFileLength();
             if (fileLength >= 0) {
-                itemViewHolder.getFileSize().setText(DisplayUtils.bytesToHumanReadable(fileLength));
-                itemViewHolder.getFileSize().setVisibility(View.VISIBLE);
-                itemViewHolder.getFileSizeSeparator().setVisibility(View.VISIBLE);
+                holder.getFileSize().setText(DisplayUtils.bytesToHumanReadable(fileLength));
+                holder.getFileSize().setVisibility(View.VISIBLE);
+                holder.getFileSizeSeparator().setVisibility(View.VISIBLE);
             } else {
-                itemViewHolder.getFileSize().setVisibility(View.GONE);
-                itemViewHolder.getFileSizeSeparator().setVisibility(View.GONE);
+                holder.getFileSize().setVisibility(View.GONE);
+                holder.getFileSizeSeparator().setVisibility(View.GONE);
             }
         }
 
         final long modificationTimestamp = file.getModificationTimestamp();
         if (modificationTimestamp > 0) {
-            itemViewHolder.getLastModification().setText(DisplayUtils.getRelativeTimestamp(activity,
-                                                                                           modificationTimestamp));
-            itemViewHolder.getLastModification().setVisibility(View.VISIBLE);
+            holder.getLastModification().setText(DisplayUtils.getRelativeTimestamp(activity,
+                                                                                   modificationTimestamp));
+            holder.getLastModification().setVisibility(View.VISIBLE);
         } else if (file.getFirstShareTimestamp() > 0) {
-            itemViewHolder.getLastModification().setText(
+            holder.getLastModification().setText(
                 DisplayUtils.getRelativeTimestamp(activity, file.getFirstShareTimestamp())
-                                                        );
-            itemViewHolder.getLastModification().setVisibility(View.VISIBLE);
+                                                );
+            holder.getLastModification().setVisibility(View.VISIBLE);
         } else {
-            itemViewHolder.getLastModification().setVisibility(View.GONE);
+            holder.getLastModification().setVisibility(View.GONE);
         }
 
 
         if (isMultiSelect() || gridView || hideItemOptions) {
-            itemViewHolder.getOverflowMenu().setVisibility(View.GONE);
+            holder.getOverflowMenu().setVisibility(View.GONE);
         } else {
-            itemViewHolder.getOverflowMenu().setVisibility(View.VISIBLE);
-            itemViewHolder.getOverflowMenu().setOnClickListener(view -> ocFileListFragmentInterface
+            holder.getOverflowMenu().setVisibility(View.VISIBLE);
+            holder.getOverflowMenu().setOnClickListener(view -> ocFileListFragmentInterface
                 .onOverflowIconClicked(file, view));
         }
     }
@@ -530,7 +539,7 @@ public class OCFileListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             return false;
         }
 
-        if (MainApp.isOnlyOnDevice() || ocFileListFragmentInterface.isSearchFragment()) {
+        if (MainApp.isOnlyOnDevice()) {
             return false;
         }
 
@@ -929,6 +938,7 @@ public class OCFileListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         currentDirectory = folder;
     }
 
+    @SuppressFBWarnings("EI_EXPOSE_REP")
     public List<OCFile> getAllFiles() {
         return mFilesAll;
     }
