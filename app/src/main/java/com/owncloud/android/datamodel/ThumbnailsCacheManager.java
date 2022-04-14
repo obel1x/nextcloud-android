@@ -462,19 +462,27 @@ public final class ThumbnailsCacheManager {
             mAsyncTasks = asyncTasks;
         }
 
-        public ThumbnailGenerationTask(ImageView imageView, FileDataStorageManager storageManager,
-                                       User user, List<ThumbnailGenerationTask> asyncTasks,
-                                       boolean gridViewEnabled)
+        public ThumbnailGenerationTask(ImageView imageView,
+                                       FileDataStorageManager storageManager,
+                                       User user,
+                                       List<ThumbnailGenerationTask> asyncTasks,
+                                       boolean gridViewEnabled,
+                                       String remoteId)
             throws IllegalArgumentException {
             this(imageView, storageManager, user, asyncTasks);
             this.gridViewEnabled = gridViewEnabled;
+            mImageKey = remoteId;
         }
 
         public GetMethod getGetMethod() {
             return getMethod;
         }
 
-        public ThumbnailGenerationTask(FileDataStorageManager storageManager, User user){
+        public String getImageKey() {
+            return mImageKey;
+        }
+
+        public ThumbnailGenerationTask(FileDataStorageManager storageManager, User user) {
             if (storageManager == null) {
                 throw new IllegalArgumentException("storageManager must not be NULL");
             }
